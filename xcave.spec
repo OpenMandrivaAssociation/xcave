@@ -42,15 +42,17 @@ It provides:
 rm -rf $RPM_BUILD_ROOT
 %makeinstall
 
-install -d $RPM_BUILD_ROOT%{_menudir}
-cat << EOF > $RPM_BUILD_ROOT%{_menudir}/%{name}
-?package(%{name}): \
- command="%{_bindir}/%{name}" \
- needs="x11" \
- section="More Applications/Databases" \
- title="XCave" \
- icon="%{name}.png" \
- longtitle="View and manage a wine cellar"
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/applications
+cat > $RPM_BUILD_ROOT%{_datadir}/applications/mandriva-%{name}.desktop << EOF
+[Desktop Entry]
+Encoding=UTF-8
+Name=XCave
+Comment=View and manage a wine cellar
+Exec=%_bindir/%{name}
+Icon=%{name}
+Terminal=false
+Type=Application
+Categories=X-MandrivaLinux-MoreApplications-Databases;Database
 EOF
 
 mkdir -p $RPM_BUILD_ROOT%{_liconsdir} $RPM_BUILD_ROOT%{_iconsdir} $RPM_BUILD_ROOT%{_miconsdir}
@@ -75,7 +77,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc ChangeLog README TODO
 %{_bindir}/%{name}
 %{_datadir}/pixmaps/%{name}
-%{_menudir}/%{name}
+%{_datadir}/applications/mandriva-%{name}.desktop
 %{_iconsdir}/%{name}.png
 %{_liconsdir}/%{name}.png
 %{_miconsdir}/%{name}.png

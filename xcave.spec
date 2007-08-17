@@ -1,12 +1,12 @@
 %define name xcave
-%define version 2.2.8
+%define version 2.2.9
 %define release %mkrel 1
 
 Summary: A wine cellar manager
 Name: %{name}
 Version: %{version}
 Release: %{release}
-Source0: http://xcave.free.fr/download/en/%{name}-%{version}.tar.bz2
+Source0: http://xcave.free.fr/download/en/%{name}-%{version}.tar.gz
 License: GPL
 Group: Databases
 Url: http://xcave.free.fr/

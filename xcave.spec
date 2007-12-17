@@ -10,7 +10,6 @@ Source0: http://xcave.free.fr/download/en/%{name}-%{version}.tar.gz
 License: GPL
 Group: Databases
 Url: http://xcave.free.fr/
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 BuildRequires: gtk+2-devel
 BuildRequires: ImageMagick
 

@@ -1,6 +1,6 @@
 %define name xcave
 %define version 2.3.0
-%define release %mkrel 1
+%define release %mkrel 3
 
 Summary: A wine cellar manager
 Name: %{name}

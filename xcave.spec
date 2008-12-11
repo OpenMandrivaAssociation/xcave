@@ -12,7 +12,7 @@ Group: Databases
 Url: http://xcave.free.fr/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 BuildRequires: gtk+2-devel
-BuildRequires: ImageMagick
+BuildRequires: imagemagick
 
 %description
 xcave is a cellar manager, to allow to view and manage the contents of

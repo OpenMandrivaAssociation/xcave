@@ -12,6 +12,7 @@ Group: Databases
 Url: http://xcave.free.fr/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 BuildRequires: gtk+2-devel
+BuildRequires: atk-devel
 BuildRequires: imagemagick
 
 %description
@@ -35,12 +36,12 @@ It provides:
 %setup -q
 
 %build
-%configure
+%configure2_5x
 %make
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%makeinstall
+%makeinstall_std
 
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/applications
 cat > $RPM_BUILD_ROOT%{_datadir}/applications/mandriva-%{name}.desktop << EOF
@@ -51,7 +52,7 @@ Exec=%_bindir/%{name}
 Icon=%{name}
 Terminal=false
 Type=Application
-Categories=Office;Database;
+Categories=Office;Database;GTK;
 EOF
 
 mkdir -p $RPM_BUILD_ROOT%{_liconsdir} $RPM_BUILD_ROOT%{_iconsdir} $RPM_BUILD_ROOT%{_miconsdir}

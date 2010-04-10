@@ -1,19 +1,22 @@
 %define name xcave
-%define version 2.3.0
-%define release %mkrel 5
+%define version 2.3.2
+%define release %mkrel 1
 
 Summary: A wine cellar manager
 Name: %{name}
 Version: %{version}
 Release: %{release}
 Source0: http://xcave.free.fr/download/en/%{name}-%{version}.tar.gz
-License: GPL
+# (fc) 2.3.2-1mdv fix build with latest glibc/gcc
+Patch0: xcave-2.3.2-fixbuild.patch
+License: GPLv2+
 Group: Databases
 Url: http://xcave.free.fr/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 BuildRequires: gtk+2-devel
 BuildRequires: atk-devel
 BuildRequires: imagemagick
+BuildRequires: intltool
 
 %description
 xcave is a cellar manager, to allow to view and manage the contents of
@@ -34,6 +37,11 @@ It provides:
 
 %prep
 %setup -q
+%patch0 -p1 -b .fixbuild
+
+intltoolize --force
+libtoolize --copy --force
+autoreconf
 
 %build
 %configure2_5x
@@ -60,7 +68,7 @@ convert -geometry 48x48 pixmaps/%{name}-icon.png $RPM_BUILD_ROOT%{_liconsdir}/%{
 convert -geometry 32x32 pixmaps/%{name}-icon.png $RPM_BUILD_ROOT%{_iconsdir}/%{name}.png
 convert -geometry 16x16 pixmaps/%{name}-icon.png $RPM_BUILD_ROOT%{_miconsdir}/%{name}.png
 
-rm -rf $RPM_BUILD_ROOT%{_docdir}
+rm -rf $RPM_BUILD_ROOT%{_prefix}/doc
 %find_lang %{name}
 
 %clean

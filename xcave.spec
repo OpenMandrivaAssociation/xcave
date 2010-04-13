@@ -14,6 +14,7 @@ Group: Databases
 Url: http://xcave.free.fr/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 BuildRequires: gtk+2-devel
+BuildRequires: libglade2-devel
 BuildRequires: atk-devel
 BuildRequires: imagemagick
 BuildRequires: intltool

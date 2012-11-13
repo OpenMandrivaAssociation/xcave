@@ -1,0 +1,63 @@
+From b6902d27146799e55704decc3442d3060e69c5f7 Mon Sep 17 00:00:00 2001
+From: Frederic Crozat <fcrozat@mandriva.com>
+Date: Sat, 10 Apr 2010 21:06:02 +0200
+Subject: [PATCH] fix build
+
+---
+ src/callbacks.c    |    6 +++---
+ src/file_xcaverc.c |    2 +-
+ src/xcave_print.c  |    1 -
+ 3 files changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/src/callbacks.c b/src/callbacks.c
+index 6e9bcb0..cc0e5ca 100644
+--- a/src/callbacks.c
++++ b/src/callbacks.c
+@@ -203,8 +203,8 @@ xcave_fill_filtered_model (gpointer		data,
+         if ( nb_bottle != 0) {			
+ 			sprintf (xcave_statusbar_txt, _("Number of bottles in cellar: %d (%s: %d)"),
+ 			                        NbBottleStock,
+-                                    nb_bottle,
+-			                        pcolor);
++			                        pcolor,
++	                                        nb_bottle);
+             xcave_statusbar_ctxtid = gtk_statusbar_push ((GtkStatusbar *)xcave_statusbar_v, xcave_statusbar_ctxtid, xcave_statusbar_txt);
+ 		}  else {
+ 	        sprintf (xcave_statusbar_txt, _("Number of bottles in cellar: %d"),NbBottleStock);
+@@ -593,7 +593,7 @@ quick_message (gchar * message)
+                                      GTK_DIALOG_DESTROY_WITH_PARENT,
+                                      GTK_MESSAGE_WARNING,
+                                      GTK_BUTTONS_CLOSE,
+-                                     message);
++                                     "%s", message);
+     gtk_dialog_run (GTK_DIALOG (dialog));
+     gtk_widget_destroy (dialog);
+ 
+diff --git a/src/file_xcaverc.c b/src/file_xcaverc.c
+index 744c510..cc2dc68 100644
+--- a/src/file_xcaverc.c
++++ b/src/file_xcaverc.c
+@@ -227,7 +227,7 @@ read_xcaverc ()
+                                           GTK_DIALOG_DESTROY_WITH_PARENT,
+                                           GTK_MESSAGE_QUESTION,
+                                           GTK_BUTTONS_YES_NO,
+-                                          msg);
++                                          "%s", msg);
+          gint result = gtk_dialog_run (GTK_DIALOG (dialog));
+ 
+          gchar   f_cmd[sizeof(f_basename) + sizeof(f_backup) + 8];
+diff --git a/src/xcave_print.c b/src/xcave_print.c
+index 2482043..79245fd 100644
+--- a/src/xcave_print.c
++++ b/src/xcave_print.c
+@@ -355,7 +355,6 @@ on_xcave_print_radiobutton_lpr_pressed (GtkButton       *button,
+ {
+     XCAVE_DEBUG_B;
+ 	flagprint = lpr;
+-	sprintf(printerLocation,printerLocation);
+ 	gtk_entry_set_text(GTK_ENTRY(lookup_widget (window_print, "xcave_print_hbox2_entry_printer")),printerLocation);
+     XCAVE_DEBUG_E;
+ }
+-- 
+1.7.0.4
+

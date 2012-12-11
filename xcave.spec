@@ -12,10 +12,9 @@ Patch0: xcave-2.3.2-fixbuild.patch
 License: GPLv2+
 Group: Databases
 Url: http://xcave.free.fr/
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
-BuildRequires: gtk+2-devel
-BuildRequires: libglade2-devel
-BuildRequires: atk-devel
+BuildRequires: pkgconfig(gtk+-2.0)
+BuildRequires: pkgconfig(libglade-2.0)
+BuildRequires: pkgconfig(atk)
 BuildRequires: imagemagick
 BuildRequires: intltool
 
@@ -49,11 +48,11 @@ autoreconf
 %make
 
 %install
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 %makeinstall_std
 
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/applications
-cat > $RPM_BUILD_ROOT%{_datadir}/applications/mandriva-%{name}.desktop << EOF
+mkdir -p %{buildroot}%{_datadir}/applications
+cat > %{buildroot}%{_datadir}/applications/mandriva-%{name}.desktop << EOF
 [Desktop Entry]
 Name=XCave
 Comment=View and manage a wine cellar
@@ -64,29 +63,16 @@ Type=Application
 Categories=Office;Database;GTK;
 EOF
 
-mkdir -p $RPM_BUILD_ROOT%{_liconsdir} $RPM_BUILD_ROOT%{_iconsdir} $RPM_BUILD_ROOT%{_miconsdir}
-convert -geometry 48x48 pixmaps/%{name}-icon.png $RPM_BUILD_ROOT%{_liconsdir}/%{name}.png
-convert -geometry 32x32 pixmaps/%{name}-icon.png $RPM_BUILD_ROOT%{_iconsdir}/%{name}.png
-convert -geometry 16x16 pixmaps/%{name}-icon.png $RPM_BUILD_ROOT%{_miconsdir}/%{name}.png
+mkdir -p %{buildroot}%{_liconsdir} %{buildroot}%{_iconsdir} %{buildroot}%{_miconsdir}
+convert -geometry 48x48 pixmaps/%{name}-icon.png %{buildroot}%{_liconsdir}/%{name}.png
+convert -geometry 32x32 pixmaps/%{name}-icon.png %{buildroot}%{_iconsdir}/%{name}.png
+convert -geometry 16x16 pixmaps/%{name}-icon.png %{buildroot}%{_miconsdir}/%{name}.png
 
-rm -rf $RPM_BUILD_ROOT%{_prefix}/doc
+rm -rf %{buildroot}%{_prefix}/doc
 %find_lang %{name}
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-%if %mdkversion < 200900
-%post
-%update_menus
-%endif
-
-%if %mdkversion < 200900
-%postun
-%clean_menus
-%endif
 
 %files -f %{name}.lang
-%defattr(-,root,root)
 %doc ChangeLog README TODO
 %{_bindir}/%{name}
 %{_datadir}/pixmaps/%{name}

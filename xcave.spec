@@ -11,7 +11,7 @@ Source0: http://xcave.free.fr/download/en/%{name}-%{version}.tar.gz
 Patch0: xcave-2.3.2-fixbuild.patch
 License: GPLv2+
 Group: Databases
-Url: http://xcave.free.fr/
+Url: https://xcave.free.fr/
 BuildRequires: pkgconfig(gtk+-2.0)
 BuildRequires: pkgconfig(libglade-2.0)
 BuildRequires: pkgconfig(atk)

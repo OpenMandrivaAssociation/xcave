@@ -12,6 +12,11 @@ Patch0: xcave-2.3.2-fixbuild.patch
 License: GPLv2+
 Group: Databases
 Url: https://xcave.free.fr/
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
+BuildRequires:	make
 BuildRequires: pkgconfig(gtk+-2.0)
 BuildRequires: pkgconfig(libglade-2.0)
 BuildRequires: pkgconfig(atk)

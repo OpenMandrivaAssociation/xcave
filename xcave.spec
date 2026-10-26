@@ -42,7 +42,7 @@ It provides:
 
 %prep
 %setup -q
-%patch0 -p1 -b .fixbuild
+%patch 0 -p1 -b .fixbuild
 
 intltoolize --force
 libtoolize --copy --force

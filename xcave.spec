@@ -46,6 +46,24 @@ It provides:
 %patch 0 -p1 -b .fixbuild
 # libxml2 2.15 made xmlCharEncodingHandler.input a union.
 sed -i 's/handler->input(/handler->input.legacyFunc(/g' src/xcave_xmlwriter.c
+# msgfmt's iconv has no ISO-8859-15 converter. Recode the catalogs first.
+python - << 'PY'
+import pathlib
+for po in pathlib.Path("po").glob("*.po"):
+    raw = po.read_bytes()
+    head = raw[:800].decode("latin1", "replace")
+    charset = None
+    for token in ("ISO-8859-15", "ISO-8859-1"):
+        if "charset=" + token in head:
+            charset = token
+            break
+    if charset is None:
+        continue
+    codec = "iso8859-15" if charset.endswith("15") else "iso8859-1"
+    text = raw.decode(codec)
+    text = text.replace("charset=" + charset, "charset=UTF-8", 1)
+    po.write_bytes(text.encode("utf-8"))
+PY
 
 intltoolize --force
 libtoolize --copy --force
@@ -53,11 +71,12 @@ autoreconf
 
 %build
 %configure2_5x
-%make
+# Generated libtool is a no-op after slibtoolize. Link with slibtool.
+%make LIBTOOL=slibtool-shared
 
 %install
 rm -rf %{buildroot}
-%makeinstall_std
+%makeinstall_std LIBTOOL=slibtool-shared
 
 mkdir -p %{buildroot}%{_datadir}/applications
 cat > %{buildroot}%{_datadir}/applications/mandriva-%{name}.desktop << EOF

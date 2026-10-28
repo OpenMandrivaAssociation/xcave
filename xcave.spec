@@ -17,6 +17,7 @@ BuildRequires:	automake
 BuildRequires:	libtool-base
 BuildRequires:	slibtool
 BuildRequires:	make
+BuildRequires: pkgconfig(libxml-2.0)
 BuildRequires: pkgconfig(gtk+-2.0)
 BuildRequires: pkgconfig(libglade-2.0)
 BuildRequires: pkgconfig(atk)
@@ -43,6 +44,8 @@ It provides:
 %prep
 %setup -q
 %patch 0 -p1 -b .fixbuild
+# libxml2 2.15 made xmlCharEncodingHandler.input a union.
+sed -i 's/handler->input(/handler->input.legacyFunc(/g' src/xcave_xmlwriter.c
 
 intltoolize --force
 libtoolize --copy --force

@@ -64,6 +64,58 @@ for po in pathlib.Path("po").glob("*.po"):
     text = text.replace("charset=" + charset, "charset=UTF-8", 1)
     po.write_bytes(text.encode("utf-8"))
 PY
+# callbacks.h defines its globals in the header. -fno-common then
+# reports a duplicate symbol from every object file. Define them once.
+python - << 'PY'
+import pathlib, re
+p = pathlib.Path("src/callbacks.h")
+text = p.read_bytes().decode("latin1")
+needle = "#define _CALLBACKS_H\n"
+insert = needle + "\n#ifdef XCAVE_DEFINE_GLOBALS\n#define XCAVE_GLOBAL\n#else\n#define XCAVE_GLOBAL extern\n#endif\n"
+if needle not in text:
+    raise SystemExit("callbacks guard missing")
+text = text.replace(needle, insert, 1)
+types = r"(?:gchar|gint|guint|gboolean|GList|GtkWidget|GdkFont|ptrCateg|degustation_sheet)"
+out = []
+depth = 0
+paren = 0
+for line in text.splitlines(keepends=True):
+    raw = line
+    code = re.sub(r"/\*.*?\*/", "", raw)
+    code = code.split("//", 1)[0]
+    stripped = code.strip()
+    if (
+        depth == 0
+        and paren == 0
+        and re.match(types + r"\b", stripped)
+        and stripped.endswith(";")
+        and "(" not in stripped
+    ):
+        indent = re.match(r"\s*", raw).group(0)
+        rest = raw[len(indent):]
+        if not rest.startswith("XCAVE_GLOBAL"):
+            raw = indent + "XCAVE_GLOBAL " + rest
+    out.append(raw)
+    for ch in code:
+        if ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+        elif ch == "(":
+            paren += 1
+        elif ch == ")":
+            paren -= 1
+if depth or paren:
+    raise SystemExit("unbalanced callbacks.h")
+p.write_bytes("".join(out).encode("latin1"))
+main = pathlib.Path("src/main.c")
+mt = main.read_text()
+old = '#include "callbacks.h"'
+new = '#define XCAVE_DEFINE_GLOBALS\n#include "callbacks.h"'
+if old not in mt:
+    raise SystemExit("main include missing")
+main.write_text(mt.replace(old, new, 1))
+PY
 
 intltoolize --force
 libtoolize --copy --force
